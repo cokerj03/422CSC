@@ -3,13 +3,16 @@
  */
 
 package com.mycompany.petdatabase;
-
 /**
  *
  * @author jamiecoker
  */
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 
 class Pet {
     private String name;
@@ -43,7 +46,7 @@ class Pet {
 }
 
 public class PetDatabase {
-    private static ArrayList<Pet> pets = new ArrayList<>();
+    private static List<Pet> pets = new ArrayList<>(); // Moved to static list
     private static Scanner scanner = new Scanner(System.in);
 
     public static void main(String[] args) {
@@ -80,7 +83,7 @@ public class PetDatabase {
                     searchByAge();
                     break;
                 case 7:
-                    System.out.println("Goodbye!");
+                    exitProgram();
                     return;
                 default:
                     System.out.println("Invalid choice. Try again.");
@@ -168,5 +171,22 @@ public class PetDatabase {
             }
         }
         System.out.println("+----------------------+");
+    }
+
+    private static void exitProgram() {
+        savePetsToFile();
+        System.out.println("Goodbye! Pet data saved successfully.");
+    }
+
+    private static void savePetsToFile() {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter("pets.txt"))) {
+            for (Pet pet : pets) {
+                writer.write(pet.getName() + " " + pet.getAge());
+                writer.newLine();
+            }
+        } catch (IOException e) {
+            System.out.println("An error occurred while saving pet data.");
+            e.printStackTrace();
+        }
     }
 }
