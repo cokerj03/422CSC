@@ -92,6 +92,33 @@ public class PetDatabase {
     }
 
     private static void viewPets() {
+        
+        if (pets.size() >= 5) {
+        System.out.println("Database is full. Cannot add more pets.");
+        return;
+    }
+    System.out.print("Enter pet name and age separated by a space: ");
+    String input = scanner.nextLine();
+    String[] parts = input.split(" ");
+    
+    if (parts.length != 2) {
+        System.out.println("Invalid input. Please provide both a name and an age.");
+        return;
+    }
+
+    String name = parts[0];
+    int age;
+
+    try {
+        age = Integer.parseInt(parts[1]);
+        if (age < 1 || age > 20) {
+            System.out.println("Invalid age. Age must be between 1 and 20.");
+            return;
+        }
+    } catch (NumberFormatException e) {
+        System.out.println("Invalid age format. Age must be a number.");
+        return;
+    }
         System.out.println("+----------------------+");
         System.out.println("| ID | NAME      | AGE |");
         System.out.println("+----------------------+");
@@ -113,36 +140,46 @@ public class PetDatabase {
     }
 
     private static void updatePet() {
-        viewPets();
-        System.out.print("Enter pet ID to update: ");
-        int id = scanner.nextInt();
-        scanner.nextLine();  // Consume newline
-        if (id < 0 || id >= pets.size()) {
-            System.out.println("Invalid ID.");
-            return;
-        }
-        System.out.print("Enter new name: ");
-        String newName = scanner.nextLine();
-        System.out.print("Enter new age: ");
-        int newAge = scanner.nextInt();
-        scanner.nextLine();  // Consume newline
-        pets.get(id).setName(newName);
-        pets.get(id).setAge(newAge);
-        System.out.println("Pet updated.");
+    viewPets();
+    System.out.print("Enter pet ID to update: ");
+    int id = scanner.nextInt();
+    scanner.nextLine();  // Consume newline
+
+    if (id < 0 || id >= pets.size()) {
+        System.out.println("Invalid ID. Please enter a valid pet ID.");
+        return;
     }
 
-    private static void removePet() {
-        viewPets();
-        System.out.print("Enter pet ID to remove: ");
-        int id = scanner.nextInt();
-        scanner.nextLine();  // Consume newline
-        if (id < 0 || id >= pets.size()) {
-            System.out.println("Invalid ID.");
-            return;
-        }
-        pets.remove(id);
-        System.out.println("Pet removed.");
+    System.out.print("Enter new name: ");
+    String newName = scanner.nextLine();
+    System.out.print("Enter new age (1-20): ");
+    int newAge = scanner.nextInt();
+    scanner.nextLine();  // Consume newline
+
+    if (newAge < 1 || newAge > 20) {
+        System.out.println("Invalid age. Age must be between 1 and 20.");
+        return;
     }
+
+    pets.get(id).setName(newName);
+    pets.get(id).setAge(newAge);
+    System.out.println("Pet updated.");
+}
+
+private static void removePet() {
+    viewPets();
+    System.out.print("Enter pet ID to remove: ");
+    int id = scanner.nextInt();
+    scanner.nextLine();  // Consume newline
+
+    if (id < 0 || id >= pets.size()) {
+        System.out.println("Invalid ID. Please enter a valid pet ID.");
+        return;
+    }
+
+    pets.remove(id);
+    System.out.println("Pet removed.");
+}
 
     private static void searchByName() {
         System.out.print("Enter the name to search for: ");
